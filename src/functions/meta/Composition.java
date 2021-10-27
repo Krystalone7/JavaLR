@@ -2,27 +2,27 @@ package functions.meta;
 
 import functions.Function;
 
-public class Composition implements Function{
-    private Function a;
-    private Function b;
+public class Composition implements Function {
+    private Function f1;
+    private Function f2;
 
-    public Composition(Function a, Function b) {
-        this.a = a;
-        this.b = b;
+    public Composition(Function f1, Function f2) {
+        this.f1 = f1;
+        this.f2 = f2;
     }
 
     @Override
     public double getLeftDomainBorder() {
-        return Math.min(a.getLeftDomainBorder(),b.getLeftDomainBorder());
+        return Math.min(f1.getLeftDomainBorder(), f2.getLeftDomainBorder());
     }
 
     @Override
     public double getRightDomainBorder() {
-        return Math.min(a.getRightDomainBorder(),b.getRightDomainBorder());
+        return Math.max(f1.getRightDomainBorder(), f2.getRightDomainBorder());
     }
 
     @Override
     public double getFunctionValue(double x) {
-        return a.getFunctionValue(b.getFunctionValue(x));
+        return f1.getFunctionValue(f2.getFunctionValue(x));
     }
 }

@@ -3,41 +3,40 @@ package functions.meta;
 import functions.Function;
 
 public class Scale implements Function {
-    private Function a;
-    private double x1;
-    private double y;
+    private Function f;
+    private double scaleX;
+    private double scaleY;
 
-
-    public Scale(Function a, double x1, double y) {
-        this.x1 = x1;
-        this.y = y;
-        this.a = a;
+    public Scale(Function f, double scaleX, double scaleY) {
+        this.f = f;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
     }
 
     @Override
     public double getLeftDomainBorder() {
-        if (x1 >= 0){
-            return a.getLeftDomainBorder()*x1;
-        } else{
-            return a.getLeftDomainBorder()/Math.abs(x1);
+        if (scaleX >= 0) {
+            return scaleX * f.getLeftDomainBorder();
+        } else {
+            return f.getLeftDomainBorder() / Math.abs(scaleX);
         }
     }
 
     @Override
     public double getRightDomainBorder() {
-        if (x1 >= 0){
-            return a.getRightDomainBorder()*x1;
-        } else{
-            return a.getRightDomainBorder()/Math.abs(x1);
+        if (scaleX >= 0) {
+            return scaleX * f.getRightDomainBorder();
+        } else {
+            return f.getRightDomainBorder() / Math.abs(scaleX);
         }
     }
 
     @Override
     public double getFunctionValue(double x) {
-        if (y >=0 ){
-            return a.getFunctionValue(x) * y;
+        if (scaleY >= 0) {
+            return scaleY * f.getFunctionValue(x);
         } else {
-            return a.getFunctionValue(x) / Math.abs(y);
+            return f.getFunctionValue(x) / Math.abs(scaleY);
         }
     }
 }

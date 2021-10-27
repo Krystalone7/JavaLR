@@ -1,38 +1,28 @@
 package functions.meta;
+
 import functions.Function;
 
 public class Mult implements Function {
+    private Function f1;
+    private Function f2;
 
-    private Function a;
-    private Function b;
-
-    public Mult(Function a, Function b){
-        this.a = a;
-        this.b = b;
+    public Mult(Function f1, Function f2) {
+        this.f1 = f1;
+        this.f2 = f2;
     }
 
     @Override
     public double getLeftDomainBorder() {
-        if (a.getLeftDomainBorder() < b.getLeftDomainBorder()){
-            return a.getLeftDomainBorder();
-        }
-        else{
-            return b.getLeftDomainBorder();
-        }
+        return Math.max(f1.getLeftDomainBorder(), f2.getLeftDomainBorder());
     }
 
     @Override
     public double getRightDomainBorder() {
-        if (a.getRightDomainBorder() < b.getRightDomainBorder()){
-            return a.getRightDomainBorder();
-        }
-        else{
-            return b.getRightDomainBorder();
-        }
+        return Math.min(f1.getRightDomainBorder(), f2.getRightDomainBorder());
     }
 
     @Override
     public double getFunctionValue(double x) {
-        return a.getFunctionValue(x) * b.getFunctionValue(x);
+        return f1.getFunctionValue(x) * f2.getFunctionValue(x);
     }
 }

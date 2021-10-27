@@ -3,27 +3,28 @@ package functions.meta;
 import functions.Function;
 
 public class Shift implements Function {
-    private Function a;
-    private double x1;
-    private double y1;
-    public Shift(Function a, double x1, double y1) {
-        this.a = a;
-        this.x1 = x1;
-        this.y1 = y1;
+    private Function f;
+    private double shiftX;
+    private double shiftY;
+
+    public Shift(Function f, double scaleX, double scaleY) {
+        this.f = f;
+        this.shiftX = scaleX;
+        this.shiftY = scaleY;
     }
 
     @Override
     public double getLeftDomainBorder() {
-        return a.getLeftDomainBorder() + x1;
+        return shiftX + f.getLeftDomainBorder();
     }
 
     @Override
     public double getRightDomainBorder() {
-        return a.getRightDomainBorder() + x1;
+        return shiftX + f.getRightDomainBorder();
     }
 
     @Override
     public double getFunctionValue(double x) {
-        return a.getFunctionValue(x) + y1;
+        return shiftY + f.getFunctionValue(x);
     }
 }

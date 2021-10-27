@@ -5,11 +5,11 @@ import functions.Function;
 public abstract class TrigonometricFunction implements Function {
     @Override
     public double getLeftDomainBorder() {
-        return -1;
+        return Double.NEGATIVE_INFINITY;
     }
 
     @Override
     public double getRightDomainBorder() {
-        return 1;
+        return Double.POSITIVE_INFINITY;
     }
 }

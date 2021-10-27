@@ -1,7 +1,7 @@
 package functions;
 
 public interface Function {
-    public double getLeftDomainBorder();
-    public double getRightDomainBorder();
-    public double getFunctionValue(double x);
+    double getLeftDomainBorder();
+    double getRightDomainBorder();
+    double getFunctionValue(double x);
 }

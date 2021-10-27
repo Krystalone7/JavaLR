@@ -3,26 +3,26 @@ package functions.meta;
 import functions.Function;
 
 public class Power implements Function {
+    private Function f;
     private double p;
-    private Function a;
 
-    public Power (Function a, double p){
-        this.a = a;
+    public Power(Function f, double p) {
+        this.f = f;
         this.p = p;
     }
 
     @Override
     public double getLeftDomainBorder() {
-        return a.getLeftDomainBorder();
+        return f.getLeftDomainBorder();
     }
 
     @Override
     public double getRightDomainBorder() {
-        return a.getRightDomainBorder();
+        return f.getRightDomainBorder();
     }
 
     @Override
     public double getFunctionValue(double x) {
-        return Math.pow(a.getFunctionValue(x) , p);
+        return Math.pow(f.getFunctionValue(x), p);
     }
 }

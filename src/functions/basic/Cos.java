@@ -6,4 +6,3 @@ public class Cos extends TrigonometricFunction {
         return Math.cos(x);
     }
 }
-

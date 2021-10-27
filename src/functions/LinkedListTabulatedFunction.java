@@ -1,195 +1,272 @@
 package functions;
 
-public class LinkedListTabulatedFunction implements TabulatedFunction {
-    private static class FunctionNode{
-        private FunctionNode next;
-        private FunctionPoint point;
-        private FunctionNode prev;
+import java.io.Serializable;
 
-        public FunctionNode(){
-
-        }
-        public FunctionNode(FunctionNode next, FunctionNode prev) {
-            this.next = next;
-            this.prev = prev;
-        }
+public class LinkedListTabulatedFunction implements TabulatedFunction, Serializable {
+    private static class FunctionNode {
+        private FunctionPoint point = null;
+        private FunctionNode prev = null;
+        private FunctionNode next = null;
     }
-    private FunctionNode head;
-    private FunctionNode cur;
-    private int len;
-    private int pos;
-    private FunctionNode getNodeByIndex (int index){
-        if (index == pos){
-            return cur;
-        }
-        else if (pos > index){
-            while (index!= pos){
-                pos--;
-                cur = cur.prev;
-            }
-            return cur;
-        }
-        else{
-            while(index!= pos){
-                pos++;
-                cur = cur.next;
-            }
-            return cur;
-        }
+    private int length;
+    private int currIndex;
+    private FunctionNode mainHead = new FunctionNode();
+    private FunctionNode head, tail, current;
+    {
+        mainHead.next = mainHead;
+        mainHead.prev = mainHead;
+        head = mainHead;
+        tail = mainHead;
+        current = mainHead;
     }
-    public FunctionNode addNodeToTail (FunctionPoint point){
-        FunctionNode cr = new FunctionNode(head, head.prev);
-        head.prev.next = cr;
-        head.prev = cr;
-        len++;
-        cr.point = point;
-        return cr;
-    }
-    public FunctionNode addNodeByIndex(int index, FunctionPoint point){
-        cur = getNodeByIndex(index);
-        pos = index;
-        FunctionNode cr = new FunctionNode(cur,cur.prev);
-        cur.prev.next = cr;
-        cur.prev = cr;
-        cur = cr;
-        len++;
-        cr.point = point;
-        return cr;
-    }
-    public FunctionNode deleteNodeByIndex(int index){
-        cur = getNodeByIndex(index);
-        pos = index;
-        FunctionNode cr = cur;
-        cur.prev.next = cr.next;
-        cur.next.prev = cr.prev;
-        cur = cr.next;
-        return cr;
-    }
-
-    public LinkedListTabulatedFunction(){
-        head = new FunctionNode();
-        head.prev = head;
-        head.next = head;
-        len = 0;
-        pos = 0;
-    }
-
-    public LinkedListTabulatedFunction(FunctionPoint[] a) throws IllegalArgumentException{
-        if (a.length < 2){
+    public LinkedListTabulatedFunction(double leftX, double rightX, int pointsCount){
+        if (leftX >= rightX || pointsCount < 2) {
             throw new IllegalArgumentException();
         }
-        else {
-            double m = a[0].getX();
-            for (FunctionPoint i : a) {
-                if (i.getX() <= m){
-                    m = i.getX();
-                    addNodeToTail(i);
-                }
-                else{
-                    throw new IllegalArgumentException();
-                }
+        length = pointsCount;
+        head = new FunctionNode();
+        mainHead.next = head;
+        current = head;
+        head.prev = mainHead;
+        current.point = new FunctionPoint(leftX, 0);
+        current.next = new FunctionNode();
+        current.next.prev = current;
+        current = current.next;
+        currIndex++;
+        for (int i = 1; i < length; i++) {
+            current.point = new FunctionPoint(current.prev.point.getX() + (rightX - leftX) / (pointsCount - 1), 0);
+            current.next = new FunctionNode();
+            current.next.prev = current;
+            current = current.next;
+            currIndex++;
+        }
+        tail.prev = current;
+        tail.next = mainHead;
+        mainHead.prev = tail;
+    }
+    public LinkedListTabulatedFunction(double leftX, double rightX, double[] values){
+        length = values.length;
+        head = new FunctionNode();
+        mainHead.next = head;
+        current = head;
+        head.prev = mainHead;
+        current.point = new FunctionPoint(leftX, values[0]);
+        current.next = new FunctionNode();
+        current.next.prev = current;
+        current = current.next;
+        currIndex++;
+        for (int i = 1; i < values.length; i++) {
+            current.point = new FunctionPoint(current.prev.point.getX() + (rightX - leftX) / (values.length - 1), values[i]);
+            current.next = new FunctionNode();
+            current.next.prev = current;
+            current = current.next;
+            currIndex++;
+        }
+        tail.prev = current;
+        tail.next = mainHead;
+        mainHead.prev = tail;
+    }
+    public LinkedListTabulatedFunction(FunctionPoint[] mass) {
+        if (mass.length < 2) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = 1; i < mass.length; i++) {
+            if (mass[i-1].getX() >= mass[i].getX()) {
+                mainHead.next = mainHead;
+                mainHead.prev = mainHead;
+                head = mainHead;
+                tail = mainHead;
+                current = mainHead;
+                throw new IllegalArgumentException();
+            } else {
+                current.next = new FunctionNode();
+                current.next.prev = current;
+                current.next.point = new FunctionPoint(mass[i - 1].getX(), mass[i - 1].getY());
+                current = current.next;
             }
         }
+        current.next = new FunctionNode();
+        current.next.prev = current;
+        current.next.point = new FunctionPoint(mass[mass.length-1].getX(), mass[mass.length-1].getY());
+        current = current.next;
+        length = mass.length;
+        head = mainHead.next;
+        tail.prev = current;
+        tail.next = mainHead;
+        mainHead.prev = tail;
     }
 
-    @Override
-    public double getLeftDomainBorder() {
-        FunctionNode k = getNodeByIndex(0);
-        return k.point.x;
-    }
-
-    @Override
-    public double getRightDomainBorder() {
-        FunctionNode k = getNodeByIndex(len-1);
-        return k.point.x;
-    }
-
-    @Override
-    public double getFunctionValue(double x) {
-        if (x >= getLeftDomainBorder() && x <= getRightDomainBorder()) {
-            for (int i = 0; i < len; i++) {
-                if (getNodeByIndex(i).point.x < x && getNodeByIndex(i+1).point.x > x) {
-                    System.out.println(i + " " + (i + 1));
-                    double k = (getNodeByIndex(i+1).point.y - getNodeByIndex(i).point.y) / (getNodeByIndex(i+1).point.x - getNodeByIndex(i).point.x);
-                    double b = (getNodeByIndex(i+1).point.y - k * getNodeByIndex(i+1).point.x);
-                    System.out.println(k+ " "+b);
-                    return (k*x + b);
-                }
+    public FunctionNode getNodeByIndex(int index) throws FunctionPointIndexOutOfBoundsException {
+        if (index < 0 || index > length) {
+            throw new FunctionPointIndexOutOfBoundsException();
+        }
+        int fromCurrent = Math.abs(currIndex - index);
+        int fromFinish = length - index - 1;
+        if(fromFinish < index){
+            if(fromFinish < fromCurrent){
+                current = tail;
+                currIndex = length - 1;
+            }
+        } else {
+            if(index < fromCurrent){
+                current = head;
+                currIndex = 0;
             }
         }
-        return Double.NaN;
+        if(index < currIndex){
+            while (currIndex != index){
+                current = current.prev;
+                currIndex--;
+            }
+        } else {
+            while(currIndex != index){
+                current = current.next;
+                currIndex++;
+            }
+        }
+        return current;
     }
-
-    @Override
-    public int getPointsCount() {
-        return len;
+    public FunctionNode addNodeToTail() {
+        tail.next = new FunctionNode();
+        tail.next.prev = tail;
+        tail.next.next = mainHead;
+        tail = tail.next;
+        length++;
+        mainHead.prev = tail;
+        return tail;
     }
-
-    @Override
-    public void deletePoint(int index) throws FunctionPointIndexOutOfBoundsException {
-        deleteNodeByIndex(index);
+    public FunctionNode addNodeByIndex(int index) {
+        if (index < 0 || index > length) {
+            throw new FunctionPointIndexOutOfBoundsException();
+        }
+        if (index == length) {
+            return addNodeToTail();
+        }
+        getNodeByIndex(index);
+        FunctionNode addedNode = new FunctionNode();
+        addedNode.next = current;
+        addedNode.prev = current.prev;
+        current.prev.next = addedNode;
+        current.prev = addedNode;
+        current = addedNode;
+        length++;
+        return current;
     }
-
-    @Override
-    public void addPoint(FunctionPoint point) throws InappropriateFunctionPointException {
-        addNodeToTail(point);
+    public FunctionNode deleteNodeByIndex(int index) {
+        if (index < 0 || index >= length) {
+            throw new FunctionPointIndexOutOfBoundsException();
+        }
+        getNodeByIndex(index);
+        FunctionNode node = current;
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
+        current = current.prev;
+        --currIndex;
+        --length;
+        head = mainHead.next;
+        tail = mainHead.prev;
+        return node;
     }
-
     @Override
-    public FunctionPoint getPoint(int index) throws FunctionPointIndexOutOfBoundsException {
+    public double getLeftDomainBorder() throws IllegalStateException {
+        if (length == 0) throw new IllegalStateException();
+        return head.point.getX();
+    }
+    @Override
+    public double getRightDomainBorder() throws IllegalStateException {
+        if (length == 0) throw new IllegalStateException();
+        return tail.point.getX();
+    }
+    @Override
+    public double getFunctionValue(double x) throws FunctionPointIndexOutOfBoundsException {
+        if (length == 0) throw new IllegalStateException();
+        if (x < head.point.getX() || x > tail.point.getX()) throw new FunctionPointIndexOutOfBoundsException();
+        current = head;
+        currIndex = 0;
+        while (current.point.getX() > x) {
+            current = current.next;
+            currIndex++;
+        }
+        if (current.point.getX() == x) return current.point.getX();
+        double k = (current.next.point.getY() - current.point.getY()) / (current.next.point.getX() - current.point.getX());
+        double b = current.next.point.getY() - k * current.next.point.getX();
+        return k * x + b;
+    }
+    @Override
+    public int getPointsCount() { return length; }
+    @Override
+    public FunctionPoint getPoint(int index) {
+        if (length == 0) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
         return getNodeByIndex(index).point;
     }
-
     @Override
-    public void setPoint(int index, FunctionPoint point) throws FunctionPointIndexOutOfBoundsException, InappropriateFunctionPointException {
+    public void setPoint(int index, FunctionPoint point) throws InappropriateFunctionPointException {
+        if (length == 0) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
+        double left = Double.MIN_VALUE;
+        double right = Double.MAX_VALUE;
         FunctionNode node = getNodeByIndex(index);
-        node.point = point;
+        if (node.prev != null) left = node.prev.point.getX();
+        if (node.next != null) right = node.next.point.getX();
+        if (left > point.getX() || right < point.getX()) throw new InappropriateFunctionPointException();
+        node.point = new FunctionPoint(point);
     }
-
     @Override
-    public double getPointX(int index) throws FunctionPointIndexOutOfBoundsException {
-        if (index < 0 || index >= len){
-            throw new FunctionPointIndexOutOfBoundsException();
-        }
-        else{
-            FunctionNode node = getNodeByIndex(index);
-            return node.point.x;
-        }
-
+    public double getPointX(int index) {
+        if (length == 0) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
+        return getNodeByIndex(index).point.getX();
     }
-
     @Override
-    public void setPointX(int index, double x) throws FunctionPointIndexOutOfBoundsException, InappropriateFunctionPointException {
-        if (index < 0 || index >= len){
-            throw new FunctionPointIndexOutOfBoundsException();
-        }
-        else{
-            FunctionNode node = getNodeByIndex(index);
-            node.point.x = x;
-        }
+    public void setPointX(int index, double x) throws InappropriateFunctionPointException {
+        if (length == 0) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
+        double left = Double.MIN_VALUE;
+        double right = Double.MAX_VALUE;
+        FunctionNode node = getNodeByIndex(index);
+        if (node.prev != null) left = node.prev.point.getX();
+        if (node.next != null) right = node.next.point.getX();
+        if (left > x || right < x) throw new InappropriateFunctionPointException();
+        node.point.setX(x);
     }
-
     @Override
     public double getPointY(int index) {
-        if (index < 0 || index >= len){
-            throw new FunctionPointIndexOutOfBoundsException();
-        }
-        else{
-            FunctionNode node = getNodeByIndex(index);
-            return node.point.y;
-        }
+        if (length == 0) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
+        return getNodeByIndex(index).point.getY();
     }
-
     @Override
     public void setPointY(int index, double y) {
-        if (index < 0 || index >= len){
-            throw new FunctionPointIndexOutOfBoundsException();
-        }
-        else{
-            FunctionNode node = getNodeByIndex(index);
-            node.point.y = y;
-        }
+        if (length == 0) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
+        getNodeByIndex(index).point.setY(y);
     }
-
-
+    @Override
+    public void deletePoint(int index) {
+        if (length < 3) throw new IllegalStateException();
+        if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
+        deleteNodeByIndex(index);
+    }
+    @Override
+    public void addPoint(FunctionPoint point) throws InappropriateFunctionPointException {
+        if (length != 0 && (point.getX() < head.point.getX() || point.getX() > tail.point.getX())) throw new InappropriateFunctionPointException();
+        if (length == 0) {
+            head = new FunctionNode();
+            head.point = new FunctionPoint(point);
+            length++;
+            tail = head;
+            current = head;
+            currIndex = 0;
+            return;
+        }
+        current = head;
+        currIndex = 0;
+        while (current.point.getX() < point.getX()) {
+            current = current.next;
+            currIndex++;
+        }
+        if (current.point.getX() == point.getX()) throw new InappropriateFunctionPointException();
+        addNodeByIndex(currIndex).point = point;
+    }
 }
