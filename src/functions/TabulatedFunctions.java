@@ -6,15 +6,11 @@ public class TabulatedFunctions {
     private TabulatedFunctions() {}
 
     public static TabulatedFunction tabulate(Function function, double leftX, double rightX, int pointsCount) throws IllegalArgumentException {
-        if (leftX < function.getLeftDomainBorder() || function.getRightDomainBorder() < rightX) {
-            throw new IllegalArgumentException();
-        }
-        FunctionPoint[] points = new FunctionPoint[pointsCount];
-        points[0] = new FunctionPoint(leftX, function.getFunctionValue(leftX));
+        ArrayTabulatedFunction arr = new ArrayTabulatedFunction(leftX, rightX, pointsCount);
         for(int i = 1; i < pointsCount; i++) {
-            points[i] = new FunctionPoint(points[i-1].getX() + (rightX - leftX) / (pointsCount - 1), function.getFunctionValue( + (rightX - leftX) / (pointsCount - 1)));
+            arr.setPointY(i, function.getFunctionValue(arr.getPointX(i)));
         }
-        return new ArrayTabulatedFunction(points);
+        return arr;
     }
     public static void outputTabulatedFunction(TabulatedFunction function, OutputStream out) {
         try {
