@@ -10,4 +10,5 @@ public interface TabulatedFunction extends Function{
     void setPointY(int index, double y) throws FunctionPointIndexOutOfBoundsException;
     void deletePoint(int index) throws FunctionPointIndexOutOfBoundsException, IllegalStateException;
     void addPoint(FunctionPoint point) throws InappropriateFunctionPointException;
+    Object clone();
 }

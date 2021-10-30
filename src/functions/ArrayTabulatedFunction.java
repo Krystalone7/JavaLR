@@ -196,16 +196,19 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
         if (obj == null) return false;
         if (obj instanceof TabulatedFunction) {
             if (obj instanceof ArrayTabulatedFunction) {
-                if (((ArrayTabulatedFunction) obj).len == len) {
+                if (((ArrayTabulatedFunction) obj).len != len) {
                     return false;
                 }
                 for (int i = 0; i < len; i++) {
-                    if (!(arr[i].equals(((ArrayTabulatedFunction) obj).getPoint(i)))) {
+                    if (!(arr[i].getX()!=((ArrayTabulatedFunction)obj).arr[i].getX())) {
+                        return false;
+                    }
+                    if (!(arr[i].getY()!=((ArrayTabulatedFunction)obj).arr[i].getY())) {
                         return false;
                     }
                 }
             } else {
-                if (((TabulatedFunction) obj).getPointsCount() == len) {
+                if (((TabulatedFunction) obj).getPointsCount() != len) {
                     return false;
                 }
                 for (int i = 0; i < len; i++) {
@@ -220,7 +223,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
     }
 
     @Override
-    protected Object clone(){
+    public Object clone(){
         FunctionPoint[] functionPoints = new FunctionPoint[len];
         for (int i = 0; i < len; i++) {
             functionPoints[i] = arr[i];
@@ -230,11 +233,11 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (FunctionPoint poi: arr) {
-            sb.append(poi.toString()).append(", ");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            stringBuilder.append(arr[i]).append(", ");
         }
-        sb.deleteCharAt(sb.length() - 1).deleteCharAt(sb.length() - 1);
-        return ("{ " + sb + " }");
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1).deleteCharAt(stringBuilder.length() - 1);
+        return ("{" + stringBuilder + "}");
     }
 }

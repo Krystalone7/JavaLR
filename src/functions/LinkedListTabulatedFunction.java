@@ -8,10 +8,12 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         private FunctionNode prev = null;
         private FunctionNode next = null;
     }
+
     private int length;
     private int currIndex;
-    private FunctionNode mainHead = new FunctionNode();
+    private final FunctionNode mainHead = new FunctionNode();
     private FunctionNode head, tail, current;
+
     {
         mainHead.next = mainHead;
         mainHead.prev = mainHead;
@@ -19,7 +21,8 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         tail = mainHead;
         current = mainHead;
     }
-    public LinkedListTabulatedFunction(double leftX, double rightX, int pointsCount){
+
+    public LinkedListTabulatedFunction(double leftX, double rightX, int pointsCount) {
         if (leftX >= rightX || pointsCount < 2) {
             throw new IllegalArgumentException();
         }
@@ -40,11 +43,12 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
             current = current.next;
             currIndex++;
         }
-        tail.prev = current;
+        tail = current.prev;
         tail.next = mainHead;
         mainHead.prev = tail;
     }
-    public LinkedListTabulatedFunction(double leftX, double rightX, double[] values){
+
+    public LinkedListTabulatedFunction(double leftX, double rightX, double[] values) {
         length = values.length;
         head = new FunctionNode();
         mainHead.next = head;
@@ -62,16 +66,17 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
             current = current.next;
             currIndex++;
         }
-        tail.prev = current;
+        tail = current.prev;
         tail.next = mainHead;
         mainHead.prev = tail;
     }
+
     public LinkedListTabulatedFunction(FunctionPoint[] mass) {
         if (mass.length < 2) {
             throw new IllegalArgumentException();
         }
         for (int i = 1; i < mass.length; i++) {
-            if (mass[i-1].getX() >= mass[i].getX()) {
+            if (mass[i - 1].getX() >= mass[i].getX()) {
                 mainHead.next = mainHead;
                 mainHead.prev = mainHead;
                 head = mainHead;
@@ -87,11 +92,11 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         }
         current.next = new FunctionNode();
         current.next.prev = current;
-        current.next.point = new FunctionPoint(mass[mass.length-1].getX(), mass[mass.length-1].getY());
+        current.next.point = new FunctionPoint(mass[mass.length - 1].getX(), mass[mass.length - 1].getY());
         current = current.next;
         length = mass.length;
         head = mainHead.next;
-        tail.prev = current;
+        tail = current.prev;
         tail.next = mainHead;
         mainHead.prev = tail;
     }
@@ -102,30 +107,31 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         }
         int fromCurrent = Math.abs(currIndex - index);
         int fromFinish = length - index - 1;
-        if(fromFinish < index){
-            if(fromFinish < fromCurrent){
+        if (fromFinish < index) {
+            if (fromFinish < fromCurrent) {
                 current = tail;
                 currIndex = length - 1;
             }
         } else {
-            if(index < fromCurrent){
+            if (index < fromCurrent) {
                 current = head;
                 currIndex = 0;
             }
         }
-        if(index < currIndex){
-            while (currIndex != index){
+        if (index < currIndex) {
+            while (currIndex != index) {
                 current = current.prev;
                 currIndex--;
             }
         } else {
-            while(currIndex != index){
+            while (currIndex != index) {
                 current = current.next;
                 currIndex++;
             }
         }
         return current;
     }
+
     public FunctionNode addNodeToTail() {
         tail.next = new FunctionNode();
         tail.next.prev = tail;
@@ -135,6 +141,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         mainHead.prev = tail;
         return tail;
     }
+
     public FunctionNode addNodeByIndex(int index) {
         if (index < 0 || index > length) {
             throw new FunctionPointIndexOutOfBoundsException();
@@ -152,6 +159,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         length++;
         return current;
     }
+
     public FunctionNode deleteNodeByIndex(int index) {
         if (index < 0 || index >= length) {
             throw new FunctionPointIndexOutOfBoundsException();
@@ -167,16 +175,19 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         tail = mainHead.prev;
         return node;
     }
+
     @Override
     public double getLeftDomainBorder() throws IllegalStateException {
         if (length == 0) throw new IllegalStateException();
         return head.point.getX();
     }
+
     @Override
     public double getRightDomainBorder() throws IllegalStateException {
         if (length == 0) throw new IllegalStateException();
         return tail.point.getX();
     }
+
     @Override
     public double getFunctionValue(double x) throws FunctionPointIndexOutOfBoundsException {
         if (length == 0) throw new IllegalStateException();
@@ -192,14 +203,19 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         double b = current.next.point.getY() - k * current.next.point.getX();
         return k * x + b;
     }
+
     @Override
-    public int getPointsCount() { return length; }
+    public int getPointsCount() {
+        return length;
+    }
+
     @Override
     public FunctionPoint getPoint(int index) {
         if (length == 0) throw new IllegalStateException();
         if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
         return getNodeByIndex(index).point;
     }
+
     @Override
     public void setPoint(int index, FunctionPoint point) throws InappropriateFunctionPointException {
         if (length == 0) throw new IllegalStateException();
@@ -212,12 +228,14 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         if (left > point.getX() || right < point.getX()) throw new InappropriateFunctionPointException();
         node.point = new FunctionPoint(point);
     }
+
     @Override
     public double getPointX(int index) {
         if (length == 0) throw new IllegalStateException();
         if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
         return getNodeByIndex(index).point.getX();
     }
+
     @Override
     public void setPointX(int index, double x) throws InappropriateFunctionPointException {
         if (length == 0) throw new IllegalStateException();
@@ -230,27 +248,32 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         if (left > x || right < x) throw new InappropriateFunctionPointException();
         node.point.setX(x);
     }
+
     @Override
     public double getPointY(int index) {
         if (length == 0) throw new IllegalStateException();
         if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
         return getNodeByIndex(index).point.getY();
     }
+
     @Override
     public void setPointY(int index, double y) {
         if (length == 0) throw new IllegalStateException();
         if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
         getNodeByIndex(index).point.setY(y);
     }
+
     @Override
     public void deletePoint(int index) {
         if (length < 3) throw new IllegalStateException();
         if (index < 0 || index >= length) throw new FunctionPointIndexOutOfBoundsException();
         deleteNodeByIndex(index);
     }
+
     @Override
     public void addPoint(FunctionPoint point) throws InappropriateFunctionPointException {
-        if (length != 0 && (point.getX() < head.point.getX() || point.getX() > tail.point.getX())) throw new InappropriateFunctionPointException();
+        if (length != 0 && (point.getX() < head.point.getX() || point.getX() > tail.point.getX()))
+            throw new InappropriateFunctionPointException();
         if (length == 0) {
             head = new FunctionNode();
             head.point = new FunctionPoint(point);
@@ -268,5 +291,75 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         }
         if (current.point.getX() == point.getX()) throw new InappropriateFunctionPointException();
         addNodeByIndex(currIndex).point = point;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 9 + currIndex;
+        currIndex = 0;
+        current = mainHead.next;
+        while (current != mainHead) {
+            hash += current.point.hashCode();
+            current = current.next;
+            currIndex++;
+        }
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof TabulatedFunction) {
+            if (obj instanceof LinkedListTabulatedFunction) {
+                if (((LinkedListTabulatedFunction) obj).length != length) {
+                    return false;
+                }
+                current = mainHead.next;
+                currIndex = 0;
+                while (current != mainHead) {
+                    if (!(current.point.equals(((LinkedListTabulatedFunction) obj).current.point))) {
+                        return false;
+                    }
+                }
+            } else {
+                if (((TabulatedFunction) obj).getPointsCount() != length) {
+                    return false;
+                }
+                for (int i = 0; i < length; i++) {
+                    if (!(this.getPoint(i).equals(((TabulatedFunction) obj).getPoint(i)))) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object clone(){
+        FunctionPoint[] functionPoints = new FunctionPoint[length];
+        current = head;
+        currIndex = 0;
+        while (current != mainHead) {
+            functionPoints[currIndex] = current.point;
+            current = current.next;
+            currIndex++;
+        }
+        return new ArrayTabulatedFunction(functionPoints);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        current = mainHead.next;
+        currIndex = 0;
+        while (current != mainHead) {
+            stringBuilder.append(current.point).append(", ");
+            current = current.next;
+            currIndex++;
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1).deleteCharAt(stringBuilder.length() - 1);
+        return ("{" + stringBuilder + "}");
     }
 }
