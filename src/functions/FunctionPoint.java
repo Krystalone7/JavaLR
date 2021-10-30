@@ -24,4 +24,29 @@ public class FunctionPoint implements Serializable {
         this.x = 0.0;
         this.y = 0.0;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = (int) (Double.doubleToLongBits(x) * (Double.doubleToLongBits(x) >>> 32));
+        return hash + (int) (Double.doubleToLongBits(y) * (Double.doubleToLongBits(y) >>> 32));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj instanceof FunctionPoint && obj.hashCode() == this.hashCode()) {
+            return (((FunctionPoint) obj).x == x) && ((FunctionPoint) obj).y == y;
+        }
+        return false;
+    }
+
+    @Override
+    protected Object clone() {
+        return new FunctionPoint(this);
+    }
+
+    @Override
+    public String toString() {
+        return ("(" + x + "; " + y + ")");
+    }
 }

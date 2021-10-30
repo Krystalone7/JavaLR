@@ -1,6 +1,7 @@
 package functions;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
     private FunctionPoint[] arr;
@@ -182,5 +183,58 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
         System.arraycopy(arr, last, arr, last + 1, getPointsCount() - last);
         arr[last] = point;
         ++len;
+    }
+
+    public int hashCode() {
+        int hash = 9;
+        hash = hash + Arrays.deepHashCode(arr);
+        return hash + len;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof TabulatedFunction) {
+            if (obj instanceof ArrayTabulatedFunction) {
+                if (((ArrayTabulatedFunction) obj).len == len) {
+                    return false;
+                }
+                for (int i = 0; i < len; i++) {
+                    if (!(arr[i].equals(((ArrayTabulatedFunction) obj).getPoint(i)))) {
+                        return false;
+                    }
+                }
+            } else {
+                if (((TabulatedFunction) obj).getPointsCount() == len) {
+                    return false;
+                }
+                for (int i = 0; i < len; i++) {
+                    if (!(this.getPoint(i).equals(((TabulatedFunction) obj).getPoint(i)))) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected Object clone(){
+        FunctionPoint[] functionPoints = new FunctionPoint[len];
+        for (int i = 0; i < len; i++) {
+            functionPoints[i] = arr[i];
+        }
+        return new ArrayTabulatedFunction(functionPoints);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (FunctionPoint poi: arr) {
+            sb.append(poi.toString()).append(", ");
+        }
+        sb.deleteCharAt(sb.length() - 1).deleteCharAt(sb.length() - 1);
+        return ("{ " + sb + " }");
     }
 }
