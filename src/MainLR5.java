@@ -15,5 +15,9 @@ public class MainLR5 {
         TabulatedFunction tab2 = new ArrayTabulatedFunction(functionPoints);
         System.out.println(tab1);
         System.out.println(tab1.equals(tab2));
+        TabulatedFunction tab3 = new LinkedListTabulatedFunction(1,20,20);
+        TabulatedFunction tab4 = new ArrayTabulatedFunction(1,20,new double[20]);
+        System.out.println(tab4);
+        System.out.println(tab3.equals(tab4));
     }
 }

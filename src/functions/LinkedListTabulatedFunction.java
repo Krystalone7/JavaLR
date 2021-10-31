@@ -96,7 +96,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         current = current.next;
         length = mass.length;
         head = mainHead.next;
-        tail = current.prev;
+        tail = current;
         tail.next = mainHead;
         mainHead.prev = tail;
     }
