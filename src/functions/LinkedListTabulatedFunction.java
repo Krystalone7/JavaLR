@@ -362,4 +362,5 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         stringBuilder.deleteCharAt(stringBuilder.length() - 1).deleteCharAt(stringBuilder.length() - 1);
         return ("{" + stringBuilder + "}");
     }
+
 }

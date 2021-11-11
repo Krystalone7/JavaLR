@@ -15,7 +15,6 @@ public class Sum implements Function {
     public double getLeftDomainBorder() {
         return Math.max(f1.getLeftDomainBorder(), f2.getLeftDomainBorder());
     }
-
     @Override
     public double getRightDomainBorder() {
         return Math.min(f1.getRightDomainBorder(), f2.getRightDomainBorder());
@@ -25,4 +24,5 @@ public class Sum implements Function {
     public double getFunctionValue(double x) {
         return f1.getFunctionValue(x) + f2.getFunctionValue(x);
     }
+
 }

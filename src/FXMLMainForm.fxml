@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="416.0" prefWidth="559.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLMainFormController">
+   <children>
+      <Button layoutX="394.0" layoutY="320.0" mnemonicParsing="false" onAction="#btNewClick1" prefHeight="25.0" prefWidth="87.0" text="Add point" />
+      <TableView fx:id="table" layoutX="27.0" layoutY="57.0" prefHeight="245.0" prefWidth="509.0">
+        <columns>
+          <TableColumn fx:id="columnX" prefWidth="255.0" text="X value" />
+          <TableColumn fx:id="columnY" prefWidth="253.0" text="Y value" />
+        </columns>
+      </TableView>
+      <MenuBar layoutX="27.0" layoutY="14.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#redraw" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Label layoutX="65.0" layoutY="320.0" prefHeight="17.0" prefWidth="125.0" text="New X value">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="65.0" layoutY="359.0" prefHeight="17.0" prefWidth="87.0" text="New Y value">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="edX" layoutX="168.0" layoutY="320.0" prefHeight="25.0" prefWidth="208.0" />
+      <TextField fx:id="edY" layoutX="168.0" layoutY="359.0" prefHeight="25.0" prefWidth="208.0" />
+      <Button layoutX="394.0" layoutY="359.0" mnemonicParsing="false" onAction="#btNewClick2" prefHeight="25.0" prefWidth="87.0" text="Delete" />
+   </children>
+</AnchorPane>
