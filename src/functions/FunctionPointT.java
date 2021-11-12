@@ -1,3 +1,5 @@
+package functions;
+
 public class FunctionPointT {
     private Double x;
     private Double y;

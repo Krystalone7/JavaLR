@@ -1,3 +1,5 @@
+package functions;
+
 import functions.*;
 import functions.basic.Cos;
 import functions.basic.Exp;
