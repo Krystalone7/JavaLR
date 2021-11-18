@@ -31,11 +31,21 @@ public class Main7 {
     private static void complicatedThreads(){
         Task task = new Task(100);
         Semaphore semaphore = new Semaphore();
-        new Thread(new Generator(semaphore, task)).start();
-        new Thread(new Integrator(semaphore, task)).start();
+        Thread thread1 = new Generator(semaphore, task);
+        Thread thread2 = new Integrator(semaphore, task);
+        thread1.start();
+        thread2.start();
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread1.interrupt();
+        thread2.interrupt();
     }
 
     public static void main(String[] args) {
         complicatedThreads();
+
     }
 }

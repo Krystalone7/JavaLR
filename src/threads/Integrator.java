@@ -16,6 +16,9 @@ public class Integrator extends Thread{
     @Override
     public void run() {
         for (int i = 0; i < task.getCount(); i++) {
+            if (isInterrupted()){
+                break;
+            }
             try {
                 semaphore.startIntegrator();
                 double res = Functions.integral(task.getFunction(), task.getLeftX(), task.getRightX(), task.getStep());

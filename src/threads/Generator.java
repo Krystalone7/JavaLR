@@ -18,6 +18,10 @@ public class Generator extends Thread{
     @Override
     public void run() {
         for (int i = 0; i < task.getCount(); i++) {
+            if(isInterrupted()){
+                break;
+            }
+            System.out.println(i);
             try {
                 semaphore.startGenerator();
                 task.setFunction(new Log((int) (Math.random() * 10)));
