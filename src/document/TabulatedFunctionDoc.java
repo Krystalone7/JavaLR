@@ -63,6 +63,7 @@ public class TabulatedFunctionDoc implements TabulatedFunction{
             JSONObject point = (JSONObject) jsonArray.get(0);
             FunctionPoint[] arr = new FunctionPoint[point.size()];
             FunctionPoint p = new FunctionPoint();
+            nameOfFile = fileName;
             for (int i = 0; i < point.size(); i++) {
                 JSONArray val = (JSONArray) point.get("p" + i);
                 p.setX(Double.parseDouble(val.get(0).toString()));
