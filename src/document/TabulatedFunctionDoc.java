@@ -8,6 +8,8 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 public class TabulatedFunctionDoc implements TabulatedFunction{
@@ -187,5 +189,30 @@ public class TabulatedFunctionDoc implements TabulatedFunction{
 
     public boolean isModified() {
         return modified;
+    }
+
+    @Override
+    public Iterator<FunctionPoint> iterator() {
+        return new Iterator<>() {
+            private int index;
+
+            @Override
+            public boolean hasNext() {
+                return index < tabulatedFunction.getPointsCount();
+            }
+
+            @Override
+            public FunctionPoint next() {
+                if(index >= tabulatedFunction.getPointsCount()){
+                    throw new NoSuchElementException();
+                }
+                return new FunctionPoint(tabulatedFunction.getPoint(index++));
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 }

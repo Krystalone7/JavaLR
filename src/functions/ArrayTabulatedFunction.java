@@ -2,8 +2,11 @@ package functions;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
+
     private FunctionPoint[] arr;
     private int len;
     public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) throws IllegalArgumentException{
@@ -242,5 +245,47 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1).deleteCharAt(stringBuilder.length() - 1);
         return ("{" + stringBuilder + "}");
+    }
+
+    @Override
+    public Iterator<FunctionPoint> iterator() {
+        return new Iterator<>() {
+            private int index;
+
+            @Override
+            public boolean hasNext() {
+                return index < len;
+            }
+
+            @Override
+            public FunctionPoint next() {
+                if(index >= len){
+                    throw new NoSuchElementException();
+                }
+                return new FunctionPoint(arr[index++]);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    public static class ArrayTabulatedFunctionFactory implements TabulatedFunctionFactory{
+        @Override
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount) {
+            return new ArrayTabulatedFunction(leftX, rightX, pointsCount);
+        }
+
+        @Override
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values) {
+            return new ArrayTabulatedFunction(leftX, rightX, values);
+        }
+
+        @Override
+        public TabulatedFunction createTabulatedFunction(FunctionPoint[] mass) {
+            return new ArrayTabulatedFunction(mass);
+        }
     }
 }

@@ -41,7 +41,7 @@ public class FunctionPoint implements Serializable {
     }
 
     @Override
-    protected Object clone() {
+    protected FunctionPoint clone() {
         return new FunctionPoint(this);
     }
 

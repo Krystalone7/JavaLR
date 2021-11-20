@@ -4,6 +4,21 @@ import java.io.*;
 
 public class TabulatedFunctions {
     private TabulatedFunctions() {}
+    private static TabulatedFunctionFactory tabulatedFunctionFactory = new ArrayTabulatedFunction.ArrayTabulatedFunctionFactory();
+
+    public static void setTabulatedFunctionFactory(TabulatedFunctionFactory tabulatedFunctionFactoryNew){
+        tabulatedFunctionFactory = tabulatedFunctionFactoryNew;
+    };
+    public static TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount){
+        return tabulatedFunctionFactory.createTabulatedFunction(leftX, rightX, pointsCount);
+    };
+    public static TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values){
+        return tabulatedFunctionFactory.createTabulatedFunction(leftX, rightX, values);
+    };
+    public static TabulatedFunction createTabulatedFunction(FunctionPoint[] mass){
+        return tabulatedFunctionFactory.createTabulatedFunction(mass);
+    };
+
 
     public static TabulatedFunction tabulate(Function function, double leftX, double rightX, int pointsCount) throws IllegalArgumentException {
         if (leftX < function.getLeftDomainBorder() || function.getRightDomainBorder() < rightX) {
@@ -14,7 +29,7 @@ public class TabulatedFunctions {
         for (int i = 1; i < pointsCount; i++) {
             points[i] = new FunctionPoint(points[i - 1].getX() + (rightX - leftX) / (pointsCount - 1), function.getFunctionValue(+(rightX - leftX) / (pointsCount - 1)));
         }
-        return new ArrayTabulatedFunction(points);
+        return createTabulatedFunction(points);
     }
 
     public static void outputTabulatedFunction(TabulatedFunction function, OutputStream out) {
@@ -41,7 +56,7 @@ public class TabulatedFunctions {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ArrayTabulatedFunction(points);
+        return createTabulatedFunction(points);
     }
     public static void writeTabulatedFunction(TabulatedFunction function, Writer out) {
             PrintWriter writer = new PrintWriter(out);
@@ -68,6 +83,6 @@ public class TabulatedFunctions {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ArrayTabulatedFunction(points);
+        return createTabulatedFunction(points);
     }
 }
